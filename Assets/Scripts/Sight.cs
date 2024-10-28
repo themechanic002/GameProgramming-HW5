@@ -15,23 +15,26 @@ public class Sight : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, distance, objectsLayers);
 
         detectedObject = null;
-        for (int i = 0; i < colliders.Length; i++)
+        if (colliders.Length > 0)
         {
-            Collider collider = colliders[i];
-            Vector3 directionToCollider = Vector3.Normalize(collider.bounds.center - transform.position);
-            float angleToCollider = Vector3.Angle(transform.forward, directionToCollider);
-
-            if (angleToCollider < angle)
+            for (int i = 0; i < colliders.Length; i++)
             {
-                if (!Physics.Linecast(transform.position, collider.bounds.center, out RaycastHit hit, obstacleLayers))
+                Collider collider = colliders[i];
+                Vector3 directionToCollider = Vector3.Normalize(collider.bounds.center - transform.position);
+                float angleToCollider = Vector3.Angle(transform.forward, directionToCollider);
+
+                if (angleToCollider < angle)
                 {
-                    Debug.DrawLine(transform.position, collider.bounds.center, Color.green);
-                    detectedObject = collider.gameObject;
-                    break;
-                }
-                else
-                {
-                    Debug.DrawLine(transform.position, hit.point, Color.red);
+                    if (!Physics.Linecast(transform.position, collider.bounds.center, out RaycastHit hit, obstacleLayers))
+                    {
+                        Debug.DrawLine(transform.position, collider.bounds.center, Color.green);
+                        detectedObject = collider.gameObject;
+                        break;
+                    }
+                    else
+                    {
+                        Debug.DrawLine(transform.position, hit.point, Color.red);
+                    }
                 }
             }
         }
